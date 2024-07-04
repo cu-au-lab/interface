@@ -1,26 +1,88 @@
+:root {
+    --bg-color: #f4f4f4;
+    --text-color: #333;
+    --canvas-bg: #fff;
+    --canvas-border: #ccc;
+    --button-bg: #e0e0e0;
+    --button-text: #333;
+}
+
+.dark-mode {
+    --bg-color: #333;
+    --text-color: #f4f4f4;
+    --canvas-bg: #222;
+    --canvas-border: #555;
+    --button-bg: #444;
+    --button-text: #f4f4f4;
+}
+
 body {
     font-family: Arial, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
     margin: 0;
-    background-color: #f4f4f4;
+    padding: 0;
+    background-color: var(--bg-color);
+    color: var(--text-color);
 }
 
 #container {
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+}
+
+.header-controls {
+    display: flex;
+    gap: 1rem;
+}
+
+main {
+    display: flex;
+    flex: 1;
+    padding: 1rem;
+}
+
+#shapes-panel {
+    width: 3vmin;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 }
 
 #canvas {
-    border: 1px solid #ccc;
-    background-color: #fff;
-    margin-bottom: 20px;
+    flex: 1;
+    margin: 0 1vmin;
+    background-color: var(--canvas-bg);
+    border: 1px solid var(--canvas-border);
 }
 
-#controls button {
-    margin: 5px;
-    padding: 10px 20px;
-    font-size: 16px;
+#statistics-panel {
+    width: 24vmin; /* 8 * 3vmin */
+}
+
+button {
+    background-color: var(--button-bg);
+    color: var(--button-text);
+    border: none;
+    padding: 0.5rem;
     cursor: pointer;
+    font-size: 0.9rem;
+}
+
+button:hover {
+    opacity: 0.8;
+}
+
+#darkModeToggle,
+#exportButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-color);
 }

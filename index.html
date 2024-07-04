@@ -10,17 +10,38 @@
         />
         <meta name="author" content="Bhargav Kantheti" />
         <link rel="stylesheet" href="styles.css" />
+        <script src="https://d3js.org/d3.v7.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.28.0/feather.min.js"></script>
     </head>
     <body>
         <div id="container">
-            <h1 style="font-family: monospace">interface</h1>
-            <svg id="canvas" width="800" height="600"></svg>
-            <div id="controls">
-                <button onclick="addCircle()">Add Circle</button>
-                <button onclick="addRectangle()">Add Rectangle</button>
-            </div>
+            <header>
+                <h1 style="font-family: monospace">interface</h1>
+                <div class="header-controls">
+                    <button id="darkModeToggle" aria-label="Toggle dark mode">
+                        <i data-feather="sun"></i>
+                    </button>
+                    <button id="exportButton" aria-label="Export">
+                        <i data-feather="download"></i>
+                    </button>
+                </div>
+            </header>
+            <main>
+                <div id="shapes-panel">
+                    <button onclick="addShape('circle')">Circle</button>
+                    <button onclick="addShape('rectangle')">Rectangle</button>
+                    <button onclick="addShape('triangle')">Triangle</button>
+                    <button onclick="addShape('parallelogram')">
+                        Parallelogram
+                    </button>
+                    <button onclick="addShape('rhombus')">Rhombus</button>
+                </div>
+                <svg id="canvas"></svg>
+                <div id="statistics-panel">
+                    <!-- Statistics will be added here later -->
+                </div>
+            </main>
         </div>
-        <script src="https://d3js.org/d3.v7.min.js"></script>
         <script src="script.js"></script>
     </body>
 </html>
