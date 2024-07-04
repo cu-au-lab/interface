@@ -15,13 +15,19 @@
     --canvas-border: #555;
     --button-bg: #444;
     --button-text: #f4f4f4;
-    --icon-filter: invert(1);
+    --icon-filter: invert(1) brightness(200%);
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
 }
 
 body {
     font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
     background-color: var(--bg-color);
     color: var(--text-color);
 }
@@ -37,6 +43,7 @@ header {
     justify-content: space-between;
     align-items: center;
     padding: 1rem;
+    flex-shrink: 0;
 }
 
 .header-controls {
@@ -47,7 +54,7 @@ header {
 main {
     display: flex;
     flex: 1;
-    padding: 1rem;
+    overflow: hidden;
 }
 
 #shapes-panel {
@@ -55,17 +62,20 @@ main {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    padding: 0.5rem;
+    overflow-y: auto;
 }
 
 #canvas {
     flex: 1;
-    margin: 0 1vmin;
     background-color: var(--canvas-bg);
     border: 1px solid var(--canvas-border);
 }
 
 #statistics-panel {
-    width: 24vmin; /* 8 * 3vmin */
+    width: 24vmin;
+    padding: 0.5rem;
+    overflow-y: auto;
 }
 
 button {
@@ -104,14 +114,6 @@ button:hover {
     filter: var(--icon-filter);
 }
 
-.section-button {
-    margin-top: auto;
-}
-
-#shapes-panel button.section-button {
-    height: 6vmin;
-}
-
 .contact-point {
     fill: var(--text-color);
     stroke: var(--bg-color);
@@ -121,4 +123,41 @@ button:hover {
 .thread {
     stroke: var(--text-color);
     stroke-width: 2;
+}
+
+.shape {
+    cursor: move;
+}
+
+.resize-handle {
+    cursor: nwse-resize;
+}
+
+#darkModeIcon,
+#exportIcon {
+    filter: var(--icon-filter);
+}
+
+#clearAllButton,
+#darkModeToggle,
+#exportButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+#clearAllButton img,
+#darkModeToggle img,
+#exportButton img {
+    width: 24px;
+    height: 24px;
+    filter: var(--icon-filter);
+}
+
+#clearAllButton {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
 }
