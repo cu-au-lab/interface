@@ -5,6 +5,7 @@
     --canvas-border: #ccc;
     --button-bg: #e0e0e0;
     --button-text: #333;
+    --icon-filter: none;
 }
 
 .dark-mode {
@@ -14,6 +15,7 @@
     --canvas-border: #555;
     --button-bg: #444;
     --button-text: #f4f4f4;
+    --icon-filter: invert(1);
 }
 
 body {
@@ -99,6 +101,7 @@ button:hover {
     width: 100%;
     height: 100%;
     object-fit: contain;
+    filter: var(--icon-filter);
 }
 
 .section-button {
@@ -107,4 +110,15 @@ button:hover {
 
 #shapes-panel button.section-button {
     height: 6vmin;
+}
+
+.contact-point {
+    fill: var(--text-color);
+    stroke: var(--bg-color);
+    stroke-width: 2;
+}
+
+.thread {
+    stroke: var(--text-color);
+    stroke-width: 2;
 }

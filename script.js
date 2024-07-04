@@ -1,5 +1,8 @@
 const svg = d3.select("#canvas");
 let isDarkMode = false;
+let isConnecting = false;
+let startShape = null;
+let startPoint = null;
 
 // Resize canvas
 function resizeCanvas() {
@@ -24,94 +27,201 @@ function addShape(shapeType) {
     switch (shapeType) {
         case "circle":
             shape = svg
-                .append("circle")
-                .attr("cx", x)
-                .attr("cy", y)
-                .attr("r", 20)
-                .attr("fill", "blue");
+                .append("g")
+                .attr("class", "shape circle")
+                .attr("transform", `translate(${x}, ${y})`);
+            shape.append("circle").attr("r", 20).attr("fill", "blue");
             break;
         case "ellipse-h":
             shape = svg
+                .append("g")
+                .attr("class", "shape ellipse-h")
+                .attr("transform", `translate(${x}, ${y})`);
+            shape
                 .append("ellipse")
-                .attr("cx", x)
-                .attr("cy", y)
                 .attr("rx", 30)
                 .attr("ry", 15)
                 .attr("fill", "green");
             break;
         case "ellipse-v":
             shape = svg
+                .append("g")
+                .attr("class", "shape ellipse-v")
+                .attr("transform", `translate(${x}, ${y})`);
+            shape
                 .append("ellipse")
-                .attr("cx", x)
-                .attr("cy", y)
                 .attr("rx", 15)
                 .attr("ry", 30)
                 .attr("fill", "red");
             break;
         case "square":
             shape = svg
+                .append("g")
+                .attr("class", "shape square")
+                .attr("transform", `translate(${x}, ${y})`);
+            shape
                 .append("rect")
-                .attr("x", x - 20)
-                .attr("y", y - 20)
+                .attr("x", -20)
+                .attr("y", -20)
                 .attr("width", 40)
                 .attr("height", 40)
                 .attr("fill", "purple");
             break;
         case "triangle":
             shape = svg
+                .append("g")
+                .attr("class", "shape triangle")
+                .attr("transform", `translate(${x}, ${y})`);
+            shape
                 .append("polygon")
-                .attr(
-                    "points",
-                    `${x},${y - 20} ${x - 20},${y + 20} ${x + 20},${y + 20}`
-                )
+                .attr("points", "0,-20 -20,20 20,20")
                 .attr("fill", "orange");
             break;
         case "pentagon":
             shape = svg
+                .append("g")
+                .attr("class", "shape pentagon")
+                .attr("transform", `translate(${x}, ${y})`);
+            shape
                 .append("polygon")
-                .attr("points", calculateRegularPolygonPoints(x, y, 20, 5))
+                .attr("points", calculateRegularPolygonPoints(0, 0, 20, 5))
                 .attr("fill", "cyan");
             break;
         case "hexagon":
             shape = svg
+                .append("g")
+                .attr("class", "shape hexagon")
+                .attr("transform", `translate(${x}, ${y})`);
+            shape
                 .append("polygon")
-                .attr("points", calculateRegularPolygonPoints(x, y, 20, 6))
+                .attr("points", calculateRegularPolygonPoints(0, 0, 20, 6))
                 .attr("fill", "magenta");
             break;
         case "octagon":
             shape = svg
+                .append("g")
+                .attr("class", "shape octagon")
+                .attr("transform", `translate(${x}, ${y})`);
+            shape
                 .append("polygon")
-                .attr("points", calculateRegularPolygonPoints(x, y, 20, 8))
+                .attr("points", calculateRegularPolygonPoints(0, 0, 20, 8))
                 .attr("fill", "yellow");
             break;
         case "trapezoid":
             shape = svg
+                .append("g")
+                .attr("class", "shape trapezoid")
+                .attr("transform", `translate(${x}, ${y})`);
+            shape
                 .append("polygon")
-                .attr(
-                    "points",
-                    `${x - 30},${y + 20} ${x + 30},${y + 20} ${x + 20},${
-                        y - 20
-                    } ${x - 20},${y - 20}`
-                )
+                .attr("points", "-30,20 30,20 20,-20 -20,-20")
                 .attr("fill", "brown");
             break;
         case "section":
             shape = svg
+                .append("g")
+                .attr("class", "shape section")
+                .attr("transform", `translate(${x}, ${y})`);
+            shape
                 .append("rect")
-                .attr("x", x - 50)
-                .attr("y", y - 30)
+                .attr("x", -50)
+                .attr("y", -30)
                 .attr("width", 100)
                 .attr("height", 60)
                 .attr("fill", "none")
                 .attr("stroke", "black")
                 .attr("stroke-width", 2);
             break;
+        case "thread":
+            isConnecting = true;
+            return;
     }
 
-    if (shapeType === "section") {
-        shape.call(d3.drag().on("drag", draggedSection));
-    } else {
-        shape.call(d3.drag().on("drag", dragged));
+    addContactPoints(shape);
+    shape.call(d3.drag().on("drag", dragged));
+}
+
+function addContactPoints(shape) {
+    const contactPoints = [
+        { x: 0, y: -20, position: "top" },
+        { x: 20, y: 0, position: "right" },
+        { x: 0, y: 20, position: "bottom" },
+        { x: -20, y: 0, position: "left" },
+    ];
+
+    shape
+        .selectAll(".contact-point")
+        .data(contactPoints)
+        .enter()
+        .append("circle")
+        .attr("class", "contact-point")
+        .attr("cx", (d) => d.x)
+        .attr("cy", (d) => d.y)
+        .attr("r", 3)
+        .on("click", function (event, d) {
+            if (isConnecting) {
+                if (!startShape) {
+                    startShape = shape;
+                    startPoint = d;
+                } else {
+                    createThread(startShape, startPoint, shape, d);
+                    isConnecting = false;
+                    startShape = null;
+                    startPoint = null;
+                }
+            }
+        });
+}
+
+function createThread(shape1, point1, shape2, point2) {
+    const thread = svg
+        .append("line")
+        .attr("class", "thread")
+        .attr(
+            "x1",
+            parseFloat(shape1.attr("transform").split("(")[1]) + point1.x
+        )
+        .attr(
+            "y1",
+            parseFloat(shape1.attr("transform").split("(")[1].split(",")[1]) +
+                point1.y
+        )
+        .attr(
+            "x2",
+            parseFloat(shape2.attr("transform").split("(")[1]) + point2.x
+        )
+        .attr(
+            "y2",
+            parseFloat(shape2.attr("transform").split("(")[1].split(",")[1]) +
+                point2.y
+        );
+
+    // Update thread positions when shapes are moved
+    shape1.on("drag", updateThread);
+    shape2.on("drag", updateThread);
+
+    function updateThread() {
+        thread
+            .attr(
+                "x1",
+                parseFloat(shape1.attr("transform").split("(")[1]) + point1.x
+            )
+            .attr(
+                "y1",
+                parseFloat(
+                    shape1.attr("transform").split("(")[1].split(",")[1]
+                ) + point1.y
+            )
+            .attr(
+                "x2",
+                parseFloat(shape2.attr("transform").split("(")[1]) + point2.x
+            )
+            .attr(
+                "y2",
+                parseFloat(
+                    shape2.attr("transform").split("(")[1].split(",")[1]
+                ) + point2.y
+            );
     }
 }
 
@@ -124,42 +234,8 @@ function calculateRegularPolygonPoints(cx, cy, r, n) {
     return points.join(" ");
 }
 
-function dragged(event) {
-    const shape = d3.select(this);
-    if (
-        shape.node().tagName === "circle" ||
-        shape.node().tagName === "ellipse"
-    ) {
-        shape.attr("cx", event.x).attr("cy", event.y);
-    } else if (shape.node().tagName === "rect") {
-        shape
-            .attr("x", event.x - parseFloat(shape.attr("width")) / 2)
-            .attr("y", event.y - parseFloat(shape.attr("height")) / 2);
-    } else {
-        const currentPoints = shape.attr("points").split(" ");
-        const dx =
-            event.x -
-            (parseFloat(currentPoints[0].split(",")[0]) +
-                parseFloat(currentPoints[2].split(",")[0])) /
-                2;
-        const dy =
-            event.y -
-            (parseFloat(currentPoints[0].split(",")[1]) +
-                parseFloat(currentPoints[2].split(",")[1])) /
-                2;
-        const newPoints = currentPoints.map((point) => {
-            const [x, y] = point.split(",");
-            return `${parseFloat(x) + dx},${parseFloat(y) + dy}`;
-        });
-        shape.attr("points", newPoints.join(" "));
-    }
-}
-
-function draggedSection(event) {
-    const shape = d3.select(this);
-    shape
-        .attr("x", event.x - parseFloat(shape.attr("width")) / 2)
-        .attr("y", event.y - parseFloat(shape.attr("height")) / 2);
+function dragged(event, d) {
+    d3.select(this).attr("transform", `translate(${event.x}, ${event.y})`);
 }
 
 function toggleDarkMode() {
