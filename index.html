@@ -11,7 +11,6 @@
         <meta name="author" content="Bhargav Kantheti" />
         <link rel="stylesheet" href="styles.css" />
         <script src="https://d3js.org/d3.v7.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.28.0/feather.min.js"></script>
     </head>
     <body>
         <div id="container">
@@ -19,22 +18,58 @@
                 <h1 style="font-family: monospace">interface</h1>
                 <div class="header-controls">
                     <button id="darkModeToggle" aria-label="Toggle dark mode">
-                        <i data-feather="sun"></i>
+                        <img
+                            src="./icons/moon.svg"
+                            alt="Dark mode toggle"
+                            id="darkModeIcon"
+                        />
                     </button>
                     <button id="exportButton" aria-label="Export">
-                        <i data-feather="download"></i>
+                        <img src="./icons/export.svg" alt="Export" />
                     </button>
                 </div>
             </header>
             <main>
                 <div id="shapes-panel">
-                    <button onclick="addShape('circle')">Circle</button>
-                    <button onclick="addShape('rectangle')">Rectangle</button>
-                    <button onclick="addShape('triangle')">Triangle</button>
-                    <button onclick="addShape('parallelogram')">
-                        Parallelogram
+                    <button onclick="addShape('circle')">
+                        <img src="./icons/circle.svg" alt="Circle" />
                     </button>
-                    <button onclick="addShape('rhombus')">Rhombus</button>
+                    <button onclick="addShape('ellipse-h')">
+                        <img
+                            src="./icons/ellipse-h.svg"
+                            alt="Horizontal Ellipse"
+                        />
+                    </button>
+                    <button onclick="addShape('ellipse-v')">
+                        <img
+                            src="./icons/ellipse-v.svg"
+                            alt="Vertical Ellipse"
+                        />
+                    </button>
+                    <button onclick="addShape('triangle')">
+                        <img src="./icons/triangle.svg" alt="Triangle" />
+                    </button>
+                    <button onclick="addShape('square')">
+                        <img src="./icons/square.svg" alt="Square" />
+                    </button>
+                    <button onclick="addShape('pentagon')">
+                        <img src="./icons/pentagon.svg" alt="Pentagon" />
+                    </button>
+                    <button onclick="addShape('hexagon')">
+                        <img src="./icons/hexagon.svg" alt="Hexagon" />
+                    </button>
+                    <button onclick="addShape('octagon')">
+                        <img src="./icons/octagon.svg" alt="Octagon" />
+                    </button>
+                    <button onclick="addShape('trapezoid')">
+                        <img src="./icons/trapezoid.svg" alt="Trapezoid" />
+                    </button>
+                    <button
+                        onclick="addShape('section')"
+                        class="section-button"
+                    >
+                        <img src="./icons/section.svg" alt="Section" />
+                    </button>
                 </div>
                 <svg id="canvas"></svg>
                 <div id="statistics-panel">
